@@ -1,0 +1,95 @@
+<div class="ui segment">
+<div class="ui {{loading?'active':''}} inverted dimmer">
+  <div class="ui text loader">Loading...</div>
+</div>
+<span class="ui form">
+	<span class="field">
+		<highchart id="trendChart" config="trendChartConfig"></highchart>
+	</span>
+	<h4 class="ui dividing header">Information</h4>
+	<div class="five wide fields">
+		<div class="field"></div>
+		<div class="field"></div>
+		<div class="field"></div>
+		<div class="field"><i class="filter icon"></i></div>
+		<div class="field">
+			<select class="ui right floated dropdown" ng-options="cat for cat in trendCategories" ng-model="selectedCat" ng-change="changeInfo()"></select>
+		</div>
+	</div>
+	<span class="field">
+		<div class="ui top attached tabular menu">
+			<a class="{{infoMenu.summary}} item" ng-click="infoMenu.activate('summary')">Summary</a>
+			<a class="{{infoMenu.resource}} item" ng-click="infoMenu.activate('resource')">Resources</a>
+			<a class="{{infoMenu.domain}} item" ng-click="infoMenu.activate('domain')">Domains</a>
+			<a class="{{infoMenu.harview}} item" ng-click="infoMenu.activate('harview')">HAR Viewer</a>
+			<a class="{{infoMenu.page}} item" ng-click="infoMenu.activate('page')">Page Speed</a>
+			<a class="{{infoMenu.yslow}} item" ng-click="infoMenu.activate('yslow')">ySlow</a>
+			<a class="{{infoMenu.manage}} item" ng-click="infoMenu.activate('manage')">Manage Data</a>
+		</div>
+		<div class="ui bottom attached segment" ng-show="infoMenu.resource=='active'">
+			<div class="ui grid">
+				<div class="eight wide column"><highchart id="rscSizeChart" config="rscSizeChartConfig"></highchart></div>
+				<div class="eight wide column"><highchart id="rscReqChart" config="rscReqChartConfig"></highchart></div>
+			</div>
+		</div>
+		<div class="ui bottom attached segment" ng-show="infoMenu.domain=='active'">
+			<div class="ui grid">
+				<div class="eight wide column"><highchart id="dmnSizeChart" config="dmnSizeChartConfig"></highchart></div>
+				<div class="eight wide column"><highchart id="dmnReqChart" config="dmnReqChartConfig"></highchart></div>
+			</div>
+		</div>
+		<div class="ui bottom attached segment" ng-show="infoMenu.harview=='active'">
+			<har-viewer har-log="selectedHar.log"/>
+		</div>
+		<div class="ui bottom attached segment" ng-show="infoMenu.page=='active'">
+			<highchart id="pagespeedChart" config="psScoreChartConfig"></highchart>
+		</div>
+		<div class="ui bottom attached segment" ng-show="infoMenu.yslow=='active'">
+			<highchart id="yslowChart" config="ysScoreChartConfig"></highchart>
+		</div>
+		<div class="ui bottom attached segment" ng-show="infoMenu.manage=='active'">
+			<button class="ui button">Delete This HAR</button>
+			<button class="ui button">Delete This Page HARs</button>
+			<button class="ui button">Delete This Scenario HARs</button>
+			<button class="ui button">Delete This Site HARs</button>
+			<button class="ui button">Delete This Environment HARs</button>
+			<button class="ui button">Delete All HARs</button>
+		</div>
+		<div class="ui bottom attached segment" ng-show="infoMenu.summary=='active'">
+			<div class="ui grid">
+				<div class="row"><div class="sixteen wide column"><h4 class="ui header"><i class="tag icon"></i><div class="content"><b>Label:</b> <a>{{selectedHar.overview.label}}</a></div></h4></div></div>
+				<div class="row">
+					<div class="four wide column"><h5 class="ui header"><i class="history icon"></i><div class="content"><b>Full Load Time:</b> <a ng-hide="selectedHar.overview.loadTime==null">{{selectedHar.overview.loadTime}} ms</a><a ng-show="selectedHar.overview.loadTime==null">NA</a></div></h5></div>
+					<div class="four wide column"><h5 class="ui header"><i class="server icon"></i><div class="content"><b>Total DNS Time:</b> <a ng-hide="selectedHar.detail.totalDnsTime==null">{{selectedHar.detail.totalDnsTime}} ms</a><a ng-show="selectedHar.detail.totalDnsTime==null">NA</a></div></h5></div>
+					<div class="four wide column"><h5 class="ui header"><i class="save icon"></i><div class="content"><b>Total Size:</b> <a ng-hide="selectedHar.overview.totalSize==null">{{selectedHar.overview.totalSize}} kb</a><a ng-show="selectedHar.overview.totalSize==null">NA</a></div></h5></div>
+					<div class="four wide column"><h5 class="ui header"><i class="browser icon"></i><div class="content"><b>Requests:</b> <a>{{selectedHar.overview.requests}}</a></div></h5></div>
+				</div>
+				<div class="row">
+					<div class="four wide column"><h5 class="ui header"><i class="download icon"></i><div class="content"><b>OnLoad Event:</b> <a ng-hide="selectedHar.detail.onloadEvent==null">{{selectedHar.detail.onloadEvent}} ms</a><a ng-show="selectedHar.detail.onloadEvent==null">NA</a></div></h5></div>
+					<div class="four wide column"><h5 class="ui header"><i class="upload icon"></i><div class="content"><b>Total Transfer Time:</b> <a ng-hide="selectedHar.detail.totalTransferTime==null">{{selectedHar.detail.totalTransferTime}} ms</a><a ng-show="selectedHar.detail.totalTransferTime==null">NA</a></div></h5></div>
+					<div class="four wide column"><h5 class="ui header"><i class="file text outline icon"></i><div class="content"><b>Text Files:</b> <a ng-hide="selectedHar.detail.textSize==null">{{selectedHar.detail.textSize}} kb</a><a ng-show="selectedHar.detail.textSize==null">NA</a></div></h5></div>
+					<div class="four wide column"><h5 class="ui header"><i class="exchange icon"></i><div class="content"><b>Redirects:</b> <a>{{selectedHar.detail.redirects}}</a></div></h5></div>
+				</div>
+				<div class="row">
+					<div class="four wide column"><h5 class="ui header"><i class="wait icon"></i><div class="content"><b>Start Render Time:</b> <a ng-hide="selectedHar.detail.renderStartTime==null">{{selectedHar.detail.renderStartTime}} ms</a><a ng-show="selectedHar.detail.renderStartTime==null">NA</a></div></h5></div>
+					<div class="four wide column"><h5 class="ui header"><i class="archive icon"></i><div class="content"><b>Total Server Time:</b> <a ng-hide="selectedHar.detail.totalServerTime==null">{{selectedHar.detail.totalServerTime}} ms</a><a ng-show="selectedHar.detail.totalServerTime==null">NA</a></div></h5></div>
+					<div class="four wide column"><h5 class="ui header"><i class="file video outline icon"></i><div class="content"><b>Media Files:</b> <a ng-hide="selectedHar.detail.mediaSize==null">{{selectedHar.detail.mediaSize}} kb</a><a ng-show="selectedHar.detail.mediaSize==null">NA</a></div></h5></div>
+					<div class="four wide column"><h5 class="ui header"><i class="spy icon"></i><div class="content"><b>Bad Requests:</b> <a ng-hide="selectedHar.detail.badRequests==null">{{selectedHar.detail.badRequests}}</a><a ng-show="selectedHar.detail.badRequests==null">NA</a></div></h5></div>
+				</div>
+				<div class="row">
+					<div class="four wide column"><h5 class="ui header"><i class="fork icon"></i><div class="content"><b>Time to First Byte:</b> <a ng-hide="selectedHar.detail.timeToFirstByte==null">{{selectedHar.detail.timeToFirstByte}} ms</a><a ng-show="selectedHar.detail.timeToFirstByte==null">NA</a></div></h5></div>
+					<div class="four wide column"><h5 class="ui header"><i class="linkify icon"></i><div class="content"><b>Avg. Connecting Time:</b> <a ng-hide="selectedHar.detail.avgConnectingTime==null">{{selectedHar.detail.avgConnectingTime}} ms</a><a ng-show="selectedHar.detail.avgConnectingTime==null">NA</a></div></h5></div>
+					<div class="four wide column"><h5 class="ui header"><i class="edit icon"></i><div class="content"><b>Cache Files:</b> <a ng-hide="selectedHar.detail.cacheSize==null">{{selectedHar.detail.cacheSize}} kb</a><a ng-show="selectedHar.detail.cacheSize==null">NA</a></div></h5></div>
+					<div class="four wide column"><h5 class="ui header"><i class="list icon"></i><div class="content"><b>Domains:</b> <a>{{selectedHar.overview.domains}}</a></div></h5></div>
+				</div>
+				<div class="row">
+					<div class="four wide column"></div>
+					<div class="four wide column"><h5 class="ui header"><i class="unlink icon"></i><div class="content"><b>Avg. Blocking Time:</b> <a ng-hide="selectedHar.detail.avgBlockingTime==null">{{selectedHar.detail.avgBlockingTime}} ms</a><a ng-show="selectedHar.detail.avgBlockingTime==null">NA</a></div></h5></div>
+					<div class="four wide column"></div>
+					<div class="four wide column"></div>
+				</div>
+			</div>
+		</div>
+	</span>
+</span>
+</div>

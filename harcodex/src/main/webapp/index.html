@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html ng-app="harcodex" ng-controller="HarcodexCtrl">
+<head>
+<title>Harcodex</title>
+<link rel="shortcut icon" href="resources/img/harcodex.ico" type="image/x-icon" />
+<link rel="stylesheet" href="resources/lib/semantic-ui/1.12.2/semantic.css" />
+</head>
+<body>
+	<br />
+	<br />
+	<div class="ui page centered grid">
+		<div class="sixteen wide column"><div ui-view="header"></div></div>
+	    <div class="sixteen wide column" style="min-height: 500px;"><div ui-view="content"></div></div>
+	    <div class="sixteen wide column"><div ui-view="footer"></div></div>
+	</div>
+
+	<script src="http://code.jquery.com/jquery-latest.min.js"></script>
+	<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.10/angular.min.js"></script>
+	<script src="//cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.8/angular-ui-router.min.js"></script>
+	<script src="resources/lib/semantic-ui/1.12.2/semantic.js"></script>
+	<script src="http://code.highcharts.com/highcharts.js"></script>
+	<script src="http://code.highcharts.com/modules/exporting.js"></script>
+	<script src="resources/lib/smart-table/smart-table.min.js"></script>
+	<script src="resources/lib/cacodaemon/caco-paginator.js"></script>
+	<script src="resources/lib/highcharts-ng/highcharts-ng.js"></script>
+	
+	<script src="resources/js/common/config.js"></script>
+	<script src="resources/js/directive/harviewerDir.js"></script>
+	<script src="resources/js/service/uiServ.js"></script>
+	<script src="resources/js/service/harcodexServ.js"></script>
+	<script src="resources/js/controller/harcodexCtrl.js"></script>
+	<script src="resources/js/controller/listCtrl.js"></script>
+	<script src="resources/js/controller/detailsCtrl.js"></script>
+</body>
+</html>

@@ -1,0 +1,268 @@
+<div class="ui styled fluid accordion" style="font-size:x-small;">
+	<span ng-repeat="entry in harLog.entries" ng-init="open=false">
+		<div class="{{open?'active':''}} title" ng-click="open=!open" title="{{entry.request.url}}">
+			<i class="dropdown icon"></i>
+			<div class="ui divided horizontal list">
+				<span class="item"><i class="{{getResourceIcon(entry.request.url)}} icon"></i></span>
+				<span class="item">{{entry.request.method}}</span>
+				<span class="item">{{getResource(entry.request.url)}}</span>
+				<span class="item">{{entry.response.status}} {{entry.response.statusText}}</span>
+				<span class="right floated item"><a target="_blank" href="{{entry.request.url}}" title="Open request in new window"><i class="external share icon"></i></a></span>
+			</div>
+		</div>
+		<div class="{{open?'active':''}} content" ng-init="menu={gen:true, res:false, req:false, cac:false, tim:false}">
+			<div class="ui top attached tabular menu">
+				<a class="{{menu.gen?'active':''}} item" ng-click="menu={gen:true, res:false, req:false, cac:false, tim:false}" title="{{entry.comment}}">General</a>
+				<a class="{{menu.res?'active':''}} item" ng-click="menu={gen:false, res:true, req:false, cac:false, tim:false}">Response</a>
+				<a class="{{menu.req?'active':''}} item" ng-click="menu={gen:false, res:false, req:true, cac:false, tim:false}">Request</a>
+				<a class="{{menu.cac?'active':''}} item" ng-click="menu={gen:false, res:false, req:false, cac:true, tim:false}" title="{{entry.cache.comment}}">Cache</a>
+				<a class="{{menu.tim?'active':''}} item" ng-click="menu={gen:false, res:false, req:false, cac:false, tim:true}" title="{{entry.timings.comment}}">Timings</a>
+			</div>
+			<div class="ui bottom attached segment" ng-show="menu.gen">
+				<div class="ui feed">
+					<div class="event">
+						<div class="label"><i class="tag icon"></i></div>
+						<div class="content"><div class="summary">Page Reference: <a>{{entry.pageref}}</a></div></div>
+					</div>
+					<div class="event">
+						<div class="label"><i class="wait icon"></i></div>
+						<div class="content"><div class="summary">Start Time: <a>{{entry.startedDateTime | date:'MMM dd, yyyy HH:mm:ss'}}</a></div></div>
+					</div>
+					<div class="event">
+						<div class="label"><i class="history icon"></i></div>
+						<div class="content"><div class="summary">Time Taken: <a>{{entry.time}}</a></div></div>
+					</div>
+					<div class="event">
+						<div class="label"><i class="server icon"></i></div>
+						<div class="content"><div class="summary">Server IP: <a>{{entry.serverIPAddress}}</a></div></div>
+					</div>
+					<div class="event">
+						<div class="label"><i class="share alternate icon"></i></div>
+						<div class="content"><div class="summary">Connection: <a>{{entry.connection}}</a></div></div>
+					</div>
+				</div>
+			</div>
+			<div class="ui bottom attached segment" ng-show="menu.res">
+				<div class="ui four column divided equal height center aligned grid" style="font-size:x-small;">
+					<div class="column">
+						<h5 class="ui dividing header" title="{{entry.response.comment}}">General</h5>
+						<div class="ui feed">
+							<div class="event">
+								<div class="label"><i class="signal icon"></i></div>
+								<div class="content"><div class="summary">Status: <a>{{entry.response.status}}</a></div></div>
+							</div>
+							<div class="event">
+								<div class="label"><i class="file text outline icon"></i></div>
+								<div class="content"><div class="summary">Status Text: <a>{{entry.response.statusText}}</a></div></div>
+							</div>
+							<div class="event">
+								<div class="label"><i class="html5 icon"></i></div>
+								<div class="content"><div class="summary">HTTP Version: <a>{{entry.response.httpVersion}}</a></div></div>
+							</div>
+							<div class="event">
+								<div class="label"><i class="reply icon"></i></div>
+								<div class="content"><div class="summary">Redirect URL: <a>{{entry.response.redirectURL}}</a></div></div>
+							</div>
+							<div class="event">
+								<div class="label"><i class="h icon"></i></div>
+								<div class="content"><div class="summary">Headers Size: <a>{{entry.response.headersSize}}</a></div></div>
+							</div>
+							<div class="event">
+								<div class="label"><i class="bitcoin icon"></i></div>
+								<div class="content"><div class="summary">Body Size: <a>{{entry.response.bodySize}}</a></div></div>
+							</div>
+						</div>
+					</div>
+					<div class="column">
+						<h5 class="ui dividing header">Headers</h5>
+						<div class="ui feed">
+							<div class="event" ng-repeat="header in entry.response.headers">
+								<div class="content"><div class="summary">{{header.name}}: <a>{{header.value}}</a></div></div>
+							</div>
+						</div>
+					</div>
+					<div class="column">
+						<h5 class="ui dividing header">Cookies</h5>
+						<div class="ui feed">
+							<div class="event" ng-repeat="cookie in entry.response.cookies">
+								<div class="content"><div class="summary" data-html="<table class='ui table'><thead><tr><th>Name</th><th>Value</th><th>Domain</th><th>Path</th><th>Expires</th><th>HttpOnly</th><th>Secure</th></tr></thead><tbody><tr><td>{{cookie.name}}</td><td>{{cookie.value}}</td><td>{{cookie.domain}}</td><td>{{cookie.path}}</td><td>{{cookie.expires}}</td><td>{{cookie.httpOnly}}</td><td>{{cookie.secure}}</td></tr></tbody></table>">{{cookie.name}}</div></div>
+							</div>
+						</div>
+					</div>
+					<div class="column">
+						<h5 class="ui dividing header">Content</h5>
+						<div class="ui feed">
+							<div class="event">
+								<div class="label"><i class="save icon"></i></div>
+								<div class="content"><div class="summary">Size: <a>{{entry.content.size}}</a></div></div>
+							</div>
+							<div class="event">
+								<div class="label"><i class="code icon"></i></div>
+								<div class="content"><div class="summary">MIME Type: <a>{{entry.content.mimeType}}</a></div></div>
+							</div>
+							<div class="event">
+								<div class="label"><i class="compress icon"></i></div>
+								<div class="content"><div class="summary">Compression: <a>{{entry.content.compression}}</a></div></div>
+							</div>
+							<div class="event">
+								<div class="label"><i class="attach icon"></i></div>
+								<div class="content"><div class="summary">Text: <a title="Content: {{entry.content.text}}"><i class="text width icon"></i></a></div></div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="ui bottom attached segment" ng-show="menu.req">
+				<div class="ui five column divided equal height center aligned grid" style="font-size:x-small;">
+					<div class="column">
+						<h5 class="ui dividing header" title="{{entry.request.comment}}">General</h5>
+						<div class="ui feed">
+							<div class="event">
+								<div class="label"><i class="options icon"></i></div>
+								<div class="content"><div class="summary">Method: <a>{{entry.request.method}}</a></div></div>
+							</div>
+							<div class="event">
+								<div class="label"><i class="linkify icon"></i></div>
+								<div class="content"><div class="summary">URL: <a>{{entry.request.url}}</a></div></div>
+							</div>
+							<div class="event">
+								<div class="label"><i class="html5 icon"></i></div>
+								<div class="content"><div class="summary">Http Version: <a>{{entry.request.httpVersion}}</a></div></div>
+							</div>
+							<div class="event">
+								<div class="label"><i class="slack icon"></i></div>
+								<div class="content"><div class="summary">Headers Size: <a>{{entry.request.headersSize}}</a></div></div>
+							</div>
+							<div class="event">
+								<div class="label"><i class="tasks icon"></i></div>
+								<div class="content"><div class="summary">Body Size: <a>{{entry.request.bodySize}}</a></div></div>
+							</div>
+						</div>
+					</div>
+					<div class="column">
+						<h5 class="ui dividing header">Cookies</h5>
+						<div class="ui feed">
+							<div class="event" ng-repeat="cookie in entry.request.cookies">
+								<div class="content"><div class="summary" data-html="<table class='ui table'><thead><tr><th>Name</th><th>Value</th><th>Domain</th><th>Path</th><th>Expires</th><th>HttpOnly</th><th>Secure</th></tr></thead><tbody><tr><td>{{cookie.name}}</td><td>{{cookie.value}}</td><td>{{cookie.domain}}</td><td>{{cookie.path}}</td><td>{{cookie.expires}}</td><td>{{cookie.httpOnly}}</td><td>{{cookie.secure}}</td></tr></tbody></table>">{{cookie.name}}</div></div>
+							</div>
+						</div>
+					</div>
+					<div class="column">
+						<h5 class="ui dividing header">Headers</h5>
+						<div class="ui feed">
+							<div class="event" ng-repeat="header in entry.request.headers">
+								<div class="content"><div class="summary">{{header.name}}: <a>{{header.value}}</a></div></div>
+							</div>
+						</div>
+					</div>
+					<div class="column">
+						<h5 class="ui dividing header">Query String</h5>
+						<div class="ui feed">
+							<div class="event" ng-repeat="query in entry.request.queryString">
+								<div class="content"><div class="summary">{{query.name}}: <a>{{query.value}}</a></div></div>
+							</div>
+						</div>
+					</div>
+					<div class="column">
+						<h5 class="ui dividing header" title="{{entry.request.postData.comment}}">Post Data</h5>
+						<div class="ui feed">
+							<div class="event">
+								<div class="label"><i class="code icon"></i></div>
+								<div class="content"><div class="summary">MIME Type: <a>{{entry.request.postData.mimeType}}</a></div></div>
+							</div>
+							<div class="event">
+								<div class="label"><i class="file text outline icon"></i></div>
+								<div class="content"><div class="summary">Text: <a>{{entry.request.postData.text}}</a></div></div>
+							</div>
+							<div class="event">
+								<div class="label"><i class="list icon"></i></div>
+								<div class="content">
+									<div class="summary">Params:</div>
+									<div class="meta" ng-repeat="param in entry.request.postData.params">{{param.name}}: <a>{{param.value}}</a></div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="ui bottom attached segment" ng-show="menu.cac">
+				<div class="ui two column divided equal height center aligned grid" style="font-size:x-small;">
+					<div class="column">
+						<h5 class="ui dividing header" title="{{entry.request.beforeRequest.comment}}">Before Request</h5>
+						<div class="ui feed">
+							<div class="event">
+								<div class="label"><i class="wait icon"></i></div>
+								<div class="content"><div class="summary">Expires: <a>{{entry.cache.beforeRequest.expires | date:'MMM dd, yyyy HH:mm:ss'}}</a></div></div>
+							</div>
+							<div class="event">
+								<div class="label"><i class="history icon"></i></div>
+								<div class="content"><div class="summary">Last Access: <a>{{entry.cache.beforeRequest.lastAccess | date:'MMM dd, yyyy HH:mm:ss'}}</a></div></div>
+							</div>
+							<div class="event">
+								<div class="label"><i class="tag icon"></i></div>
+								<div class="content"><div class="summary">eTag: <a>{{entry.cache.beforeRequest.eTag}}</a></div></div>
+							</div>
+							<div class="event">
+								<div class="label"><i class="tag icon"></i></div>
+								<div class="content"><div class="summary">Hit Count: <a>{{entry.cache.beforeRequest.hitCount}}</a></div></div>
+							</div>
+						</div>
+					</div>
+					<div class="column">
+						<h5 class="ui dividing header" title="{{entry.request.afterRequest.comment}}">After Request</h5>
+						<div class="ui feed">
+							<div class="event">
+								<div class="label"><i class="wait icon"></i></div>
+								<div class="content"><div class="summary">Expires: <a>{{entry.cache.afterRequest.expires | date:'MMM dd, yyyy HH:mm:ss'}}</a></div></div>
+							</div>
+							<div class="event">
+								<div class="label"><i class="history icon"></i></div>
+								<div class="content"><div class="summary">Last Access: <a>{{entry.cache.afterRequest.lastAccess | date:'MMM dd, yyyy HH:mm:ss'}}</a></div></div>
+							</div>
+							<div class="event">
+								<div class="label"><i class="tag icon"></i></div>
+								<div class="content"><div class="summary">eTag: <a>{{entry.cache.afterRequest.eTag}}</a></div></div>
+							</div>
+							<div class="event">
+								<div class="label"><i class="tag icon"></i></div>
+								<div class="content"><div class="summary">Hit Count: <a>{{entry.cache.afterRequest.hitCount}}</a></div></div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="ui bottom attached segment" ng-show="menu.tim">
+				<div class="ui feed">
+					<div class="event">
+						<div class="label"><i class="ban icon"></i></div>
+						<div class="content"><div class="summary">Blocked: <a>{{entry.timings.blocked}}</a></div></div>
+					</div>
+					<div class="event">
+						<div class="label"><i class="server icon"></i></div>
+						<div class="content"><div class="summary">DNS: <a>{{entry.timings.dns}}</a></div></div>
+					</div>
+					<div class="event">
+						<div class="label"><i class="fork icon"></i></div>
+						<div class="content"><div class="summary">Connect: <a>{{entry.timings.connect}}</a></div></div>
+					</div>
+					<div class="event">
+						<div class="label"><i class="send icon"></i></div>
+						<div class="content"><div class="summary">Send: <a>{{entry.timings.send}}</a></div></div>
+					</div>
+					<div class="event">
+						<div class="label"><i class="wait icon"></i></div>
+						<div class="content"><div class="summary">Wait: <a>{{entry.timings.wait}}</a></div></div>
+					</div>
+					<div class="event">
+						<div class="label"><i class="download icon"></i></div>
+						<div class="content"><div class="summary">Receive: <a>{{entry.timings.receive}}</a></div></div>
+					</div>
+					<div class="event">
+						<div class="label"><i class="lock icon"></i></div>
+						<div class="content"><div class="summary">SSL: <a>{{entry.timings.ssl}}</a></div></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</span>
+</div>

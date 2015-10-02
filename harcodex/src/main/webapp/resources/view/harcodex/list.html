@@ -1,0 +1,35 @@
+<div class="ui secondary  menu">
+	<div class="item"><label>Total: </label><span class="ui tag labels"><a class="ui label">{{list.length}}</a></span></div>
+	<div class="item"><label>Filtered: </label><span class="ui tag labels"><a class="ui label">{{overviews.length}}</a></span></div>
+	<div class="right menu"><a class="item" ng-click="resetFilter()" title="Reset"><i class="refresh icon"></i></a></div>
+</div>
+<div class="ui segment">
+<div class="ui {{loading?'active':''}} inverted dimmer">
+  <div class="ui text loader">Loading...</div>
+</div>
+<table class="ui sortable celled table">
+	<thead class="full-width">
+		<tr>
+			<th colspan="6">
+			<span class="ui centered grid">
+				<span class="three wide column"><label>Scenario: </label><select ng-change="filterOnChange()" ng-model="selectedScenario" ng-options="scenario for scenario in scenarios" class="ui dropdown"></select></span>
+				<span class="two wide column"><label>Site: </label><select ng-change="filterOnChange()" ng-model="selectedSite" ng-options="site for site in sites" class="ui dropdown"></select></span>
+				<span class="three wide column"><label>Environment: </label><select ng-change="filterOnChange()" ng-model="selectedEnvironment" ng-options="environment for environment in environments" class="ui dropdown"></select></span>
+				<span class="eight wide column"><label>Page: </label><select ng-change="filterOnChange()" ng-model="selectedPage" ng-options="page for page in pages" class="ui dropdown"></select></span>
+			</span>
+			</th>
+		</tr>
+	</thead>
+	<thead><tr><th>Time</th><th>Label</th><th>Domains</th><th>Requests</th><th>Load Time</th><th>HAR Count</th></tr></thead>
+	<tbody>
+		<tr ng-repeat="overview in overviews">
+		    <td>{{overview.timestamp | date:'MMM dd yyyy HH:mm:ss'}}</td>
+		    <td><a ui-sref=".details({label: overview.label})">{{overview.label}}</a></td>
+		    <td>{{overview.domains}}</td>
+		    <td>{{overview.requests}}</td>
+		    <td>{{overview.loadTime}}</td>
+		    <td>{{overview.count}}</td>
+		</tr>
+	</tbody>
+</table>
+</div>
